@@ -10,7 +10,7 @@ const User = require("../models/User");
 const bcryptSalt = 10;
 
 mongoose
-  .connect('mongodb://localhost/starter-code', {useNewUrlParser: true})
+  .connect('mongodb://localhost/boarding', {useNewUrlParser: true})
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })
@@ -29,6 +29,26 @@ let users = [
   }
 ]
 
+let games = [
+  {
+    name: 'Risiko',
+    genre: 'War',
+    _event: users[0]._id,
+    description: 'bla bla bla bla'
+  },
+  {
+    name: 'fucksick',
+    genre: 'War',
+    _event: users[0]._id,
+    description: 'bla bla bla bla'
+  },
+  {
+    name: 'Risiko',
+    genre: 'War',
+    _event: users[0]._id,
+    description: 'bla bla bla bla'
+  }
+]
 User.deleteMany()
 .then(() => {
   return User.create(users)

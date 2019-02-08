@@ -1,0 +1,30 @@
+<form action="/add-event" method="POST">
+  <label for="">Location:</label>
+  <input type="text" name="position">
+  <br>
+
+  <label for="">Date:</label>
+  <input type="datetime-local" name="date">
+  <br>
+
+ <select name="_game">
+    {{#each games}}
+      <option 
+        value='{{this._id}}'
+      >
+        {{this.name}} 
+      </option>
+    {{/each}}
+  </select>
+  <br>
+
+  <label for="">Description:</label>
+  <input type="text" name="description">
+  <br>
+
+  <label for="">Slot Available:</label>
+  <input type="number" name="slot">
+  <br>
+
+  <button type="submit">ADD EVENT</button>
+</form>
