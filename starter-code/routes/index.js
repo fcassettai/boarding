@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Game = require("../models/Game");
 const Event = require("../models/Event");
+const Join = require("../models/Join");
+
 
 /* GET home page */
 router.get("/", (req, res, next) => {
@@ -51,5 +53,24 @@ router.get('/events',(req,res,next)=>{
   .then(events=>{
     res.render('events',{events})
   })
+})
+
+//GET join 
+router.get('/join-event/:eventId',(req,res,next)=>{
+  const _event = req.params.eventId
+  const _user  = req.user._id
+  
+  const newJoin = new Join({
+   _event,
+   _user
+  })
+
+  newJoin.save()
+   .then(()=>{
+     res.redirect('/events')
+   })
+   .catch(err=>console.log(err))
+
+
 })
 module.exports = router;
