@@ -47,13 +47,26 @@ router.post("/add-event", (req, res, next) => {
 
 //GET events  //find all the events
 router.get('/events',(req,res,next)=>{
-  Event.find()
-  .populate('_game')
-  .populate('_user')
-  .then(events=>{
-    res.render('events',{events})
+  Promise.all([
+    Join.find({_user:req.user._id}).lean(),
+    Event.find()
+    .populate('_game')
+    .populate('_user').lean()
+  ]).then(([usersEvents, allEvents])=>{
+    console.log('user event',usersEvents)
+    console.log('all events',allEvents)
+    res.render('events',{ 
+      allEvents: allEvents.map(event=>({
+        ...event,
+        isJoined: usersEvents.some(join=>join._user.equals(req.user._id)&&join._event.equals(event._id))
+      })),
+      errorMessage: req.flash('errorMessage')[0]
+    })
   })
+  .catch(err=>console.log(err))
 })
+
+
 
 //GET join 
 router.get('/join-event/:eventId',(req,res,next)=>{
@@ -71,6 +84,16 @@ router.get('/join-event/:eventId',(req,res,next)=>{
    })
    .catch(err=>console.log(err))
 
+
+})
+
+//GET cancel join
+router.get('/cancel-event-join/:eventId',(req,res,next)=>{
+  console.log('req.params.eventId', req.params.eventId)
+  Join.findOneAndRemove({_event:req.params.eventId,
+  _user:req.user._id})
+  .then(()=>res.redirect('/events'))
+  .catch(err=>console.log(err))
 
 })
 module.exports = router;
