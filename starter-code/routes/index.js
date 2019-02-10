@@ -3,6 +3,7 @@ const router = express.Router();
 const Game = require("../models/Game");
 const Event = require("../models/Event");
 const Join = require("../models/Join");
+const mapbox = require('../public/javascripts/geocode');
 
 
 /* GET home page */
@@ -28,6 +29,7 @@ router.post("/add-event", (req, res, next) => {
   const { position, date, _game, description, slot } = req.body;
   const _user = req.user._id;
 
+  mapbox('pk.eyJ1IjoiZnJkMjZ4IiwiYSI6ImNqcnQ4ZGFzMjF4dDA0M3BzOWg4NGNlem4ifQ.SgF_HKYViz0-nlirZ9Ksag', `${position}`, function(err, data) { console.log(`LONG & LAT of ${position} `,data.features[0].center); });
   const newEvent = new Event({
     position,
     date,
@@ -53,8 +55,7 @@ router.get('/events',(req,res,next)=>{
     .populate('_game')
     .populate('_user').lean()
   ]).then(([usersEvents, allEvents])=>{
-    console.log('user event',usersEvents)
-    console.log('all events',allEvents)
+   
     res.render('events',{ 
       allEvents: allEvents.map(event=>({
         ...event,
@@ -89,7 +90,7 @@ router.get('/join-event/:eventId',(req,res,next)=>{
 
 //GET cancel join
 router.get('/cancel-event-join/:eventId',(req,res,next)=>{
-  console.log('req.params.eventId', req.params.eventId)
+  
   Join.findOneAndRemove({_event:req.params.eventId,
   _user:req.user._id})
   .then(()=>res.redirect('/events'))
