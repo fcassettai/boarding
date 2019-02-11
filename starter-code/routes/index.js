@@ -15,8 +15,8 @@ router.get("/", (req, res, next) => {
 //GET add-event page
 router.get("/add-event", (req, res, next) => {
   if (!req.user) {
-    req.flash("errorMessage", "You need to be connected to add a link");
-    res.redirect("/login");
+    // req.flash("errorMessage", "You need to be connected to add a link");
+    res.redirect("/auth/login");
     return;
   }
   
