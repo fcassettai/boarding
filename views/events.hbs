@@ -1,4 +1,5 @@
-<a href="/sort-by-distance">sort-by-distance</a>
+<a id='sort-by-distance' href="/sort-by-distance">sort-by-distance</a>
+<button id="get-pos">get position</button>
 {{#each allEvents}}
   <div class="card-body">
     <h5 class="card-title">{{_game.name}}</h5>
@@ -17,3 +18,15 @@
   </div>
   {{/each}}
   </div>  
+
+
+<script>
+  document.getElementById('get-pos').onclick = function(){
+ navigator.geolocation.getCurrentPosition(function(pos){
+ console.log(pos)
+ let position = `/sort-by-distance?lng=${pos.coords.longitude}&lat=${pos.coords.latitude}`
+ document.getElementById('sort-by-distance').setAttribute("href", position)
+})
+  }
+ 
+</script>
