@@ -145,4 +145,34 @@ router.get('/profile/:userId', (req, res, next)=>{
     })
     .catch(err=> console.log(err))
 })
+
+//GET sort by DISTANCE
+router.get('/sort-by-distance',(req,res)=>{
+  Promise.all([
+    Join.find({_user:req.user._id}).lean(),
+    Event.aggregate([
+      {
+        $geoNear: {
+           near: { type: "Point", coordinates: [ 13.3710443 , 52.506378 ] },
+           key: "loc",
+           distanceField: "dist.calculated"
+          //  query: { "category": "Parks" }
+        }
+      }
+   ])
+    // .populate('_game')
+    // .populate('_user').lean()
+  ]).then(([usersEvents, allEvents])=>{
+   
+    res.render('events',{ 
+      allEvents: allEvents.map(event=>({
+        ...event,
+        isJoined: usersEvents.some(join=>join._user.equals(req.user._id)&&join._event.equals(event._id)),
+        isOwner: event._user._id.equals(req.user._id)  ? true : false
+      })),
+      errorMessage: req.flash('errorMessage')[0]
+    })
+  })
+  .catch(err=>console.log(err))
+})
 module.exports = router;
