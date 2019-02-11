@@ -50,7 +50,7 @@ router.post("/add-event", (req, res, next) => {
         res.redirect("/events");
       })
       .catch(err => console.log(err));
-    console.log(`LONG & LAT of ${address} `,data.features[0].center); });
+    /*console.log(`LONG & LAT of ${address} `,data.features[0].center);*/ });
   
 });
 
@@ -89,7 +89,10 @@ router.get('/join-event/:eventId',(req,res,next)=>{
 
   newJoin.save()
    .then(()=>{
-     res.redirect('/events')
+     Event.update({_id:req.params.eventId},{ $inc: { slot: -1 }}).then(()=>{
+      res.redirect('/events')
+     }).catch(err=>console.log(err))
+     
    })
    .catch(err=>console.log(err))
 
@@ -101,14 +104,19 @@ router.get('/cancel-event-join/:eventId',(req,res,next)=>{
   
   Join.findOneAndRemove({_event:req.params.eventId,
   _user:req.user._id})
-  .then(()=>res.redirect('/events'))
+  .then(()=>{
+
+    Event.update({_id:req.params.eventId},{ $inc: { slot: +1 }}).then(()=>{
+      res.redirect('/events')
+     }).catch(err=>console.log(err))
+  })
   .catch(err=>console.log(err))
 
 })
 
 //GET cancel EVENT
 router.get('/cancel-event/:eventId',(req,res,next)=>{
-  console.log('join',)
+ 
   Promise.all([
     Event.findOneAndRemove({_id:req.params.eventId}),
     Join.deleteMany({_event:req.params.eventId}).exec()
@@ -122,11 +130,17 @@ router.get('/cancel-event/:eventId',(req,res,next)=>{
 router.get('/profile/:userId', (req, res, next)=>{
   Promise.all([
     User.findOne({_id: req.params.userId}),
-    Join.find({_user: req.params.userId}).populate('_event'),
+    Join.find({_user: req.params.userId}).populate({ 
+      path: '_event',
+      populate: {
+        path: '_game',
+        model: 'Game'
+      } 
+   }).lean(),
     Event.find({_user: req.params.userId})
   ])
     .then(([user, join, event])=>{
-      console.log(user, join, event)
+      console.log( user)
       res.render('profile', {user, join, event})
     })
     .catch(err=> console.log(err))
