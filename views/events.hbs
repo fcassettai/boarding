@@ -1,36 +1,18 @@
 {{#each allEvents}}
-<div class="card">
-<h1>Location: {{this.address}} </h1>
-<h1>Date: {{this.date}}</h1>
-<h1>Slot: {{this.slot}}</h1>
-<h1>Game: {{this._game.name}}</h1>
-<h1>Description: {{this.description}}</h1>
-<h1>Host: {{this._user.username}}</h1>
+  <div class="card-body">
+    <h5 class="card-title">{{_game.name}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">{{position}}</h6>
+    <p class="card-text"><strong>Description:</strong> {{description}}</p>
+    <p class="card-text"> <strong>Date:</strong> {{date}}</p>
+    {{!-- <p class="card-text"> <strong>Time:</strong> {{time}}</p> --}}
 
-
-{{#if this.isJoined}}
-<a 
-  href="/cancel-event-join/{{this._id}}"
-  class="btn primary">
- Cancel</a>
-
-{{else}}
-<a 
-  href="/join-event/{{this._id}}"
-  class="btn primary">
-  Join</a>
-
-{{/if}}
-
-{{#if this.isOwner}}
-<a 
-  href="/cancel-event/{{this._id}}"
-  class="btn primary">
-  Cancel Event</a>
-
-{{/if}}
-
-
-
-</div>
-{{/each}}
+    <p class="card-text"><strong>Slots:</strong> {{slot}}</p>
+    <p class="card-text"> <strong>Host:</strong> {{_user.username}}</p>
+    {{#if this.isJoined}}
+    <a href="/cancel-event-join/{{this._id}}" class="btn btn-danger">Cancel Event</a>
+    {{else}}
+    <a href="/join-event/{{this._id}}" class="btn btn-success">Join Event</a>
+    {{/if}}
+  </div>
+  {{/each}}
+  </div>  
