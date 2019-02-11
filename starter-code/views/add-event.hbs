@@ -1,5 +1,5 @@
 <form action="/add-event" method="POST">
-  <label for="">Location:</label>
+  <label for="">Address:</label>
   <div id='geocoder' class='geocoder'></div>
   <br>
 
@@ -53,6 +53,6 @@
   });
 
   document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
-  document.getElementById('geocoder').firstChild.childNodes[1].setAttribute("name", 'position')
+  document.getElementById('geocoder').firstChild.childNodes[1].setAttribute("name", 'address')
 
 </script>

@@ -1,25 +1,36 @@
 {{#each allEvents}}
 <div class="card">
-<h1>Location: {{this.position}} </h1>
+<h1>Location: {{this.address}} </h1>
 <h1>Date: {{this.date}}</h1>
 <h1>Slot: {{this.slot}}</h1>
 <h1>Game: {{this._game.name}}</h1>
 <h1>Description: {{this.description}}</h1>
 <h1>Host: {{this._user.username}}</h1>
 
+
 {{#if this.isJoined}}
 <a 
   href="/cancel-event-join/{{this._id}}"
   class="btn primary">
  Cancel</a>
-</div>
+
 {{else}}
 <a 
   href="/join-event/{{this._id}}"
   class="btn primary">
   Join</a>
-</div>
+
+{{/if}}
+
+{{#if this.isOwner}}
+<a 
+  href="/cancel-event/{{this._id}}"
+  class="btn primary">
+  Cancel Event</a>
+
 {{/if}}
 
 
+
+</div>
 {{/each}}

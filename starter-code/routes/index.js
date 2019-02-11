@@ -3,6 +3,7 @@ const router = express.Router();
 const Game = require("../models/Game");
 const Event = require("../models/Event");
 const Join = require("../models/Join");
+const User = require("../models/User")
 const mapbox = require('../public/javascripts/geocode');
 
 
@@ -26,25 +27,31 @@ router.get("/add-event", (req, res, next) => {
 
 //POST add-event
 router.post("/add-event", (req, res, next) => {
-  const { position, date, _game, description, slot } = req.body;
+  const { address, date, _game, description, slot } = req.body;
   const _user = req.user._id;
 
-  mapbox('pk.eyJ1IjoiZnJkMjZ4IiwiYSI6ImNqcnQ4ZGFzMjF4dDA0M3BzOWg4NGNlem4ifQ.SgF_HKYViz0-nlirZ9Ksag', `${position}`, function(err, data) { console.log(`LONG & LAT of ${position} `,data.features[0].center); });
-  const newEvent = new Event({
-    position,
-    date,
-    _game,
-    description,
-    slot,
-    _user
-  });
-
-  newEvent
-    .save()
-    .then(event => {
-      res.redirect("/events");
-    })
-    .catch(err => console.log(err));
+  mapbox('pk.eyJ1IjoiZnJkMjZ4IiwiYSI6ImNqcnQ4ZGFzMjF4dDA0M3BzOWg4NGNlem4ifQ.SgF_HKYViz0-nlirZ9Ksag', `${address}`, function(err, data) { 
+    const newEvent = new Event({
+      address,
+      "loc": { 
+        "type": "Point",
+        "coordinates": data.features[0].center
+    },
+      date,
+      _game,
+      description,
+      slot,
+      _user
+    });
+  
+    newEvent
+      .save()
+      .then(event => {
+        res.redirect("/events");
+      })
+      .catch(err => console.log(err));
+    console.log(`LONG & LAT of ${address} `,data.features[0].center); });
+  
 });
 
 //GET events  //find all the events
@@ -59,7 +66,8 @@ router.get('/events',(req,res,next)=>{
     res.render('events',{ 
       allEvents: allEvents.map(event=>({
         ...event,
-        isJoined: usersEvents.some(join=>join._user.equals(req.user._id)&&join._event.equals(event._id))
+        isJoined: usersEvents.some(join=>join._user.equals(req.user._id)&&join._event.equals(event._id)),
+        isOwner: event._user._id.equals(req.user._id)  ? true : false
       })),
       errorMessage: req.flash('errorMessage')[0]
     })
@@ -96,5 +104,31 @@ router.get('/cancel-event-join/:eventId',(req,res,next)=>{
   .then(()=>res.redirect('/events'))
   .catch(err=>console.log(err))
 
+})
+
+//GET cancel EVENT
+router.get('/cancel-event/:eventId',(req,res,next)=>{
+  console.log('join',)
+  Promise.all([
+    Event.findOneAndRemove({_id:req.params.eventId}),
+    Join.deleteMany({_event:req.params.eventId}).exec()
+  ])
+  .then(()=>res.redirect('/events'))
+  .catch(err=>console.log(err))
+
+})
+
+//get user profile
+router.get('/profile/:userId', (req, res, next)=>{
+  Promise.all([
+    User.findOne({_id: req.params.userId}),
+    Join.find({_user: req.params.userId}).populate('_event'),
+    Event.find({_user: req.params.userId})
+  ])
+    .then(([user, join, event])=>{
+      console.log(user, join, event)
+      res.render('profile', {user, join, event})
+    })
+    .catch(err=> console.log(err))
 })
 module.exports = router;

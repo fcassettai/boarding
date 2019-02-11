@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const joinSchema = new Schema({
   _event: {
     type: Schema.Types.ObjectId,
-    ref: "Game"
+    ref: "Event"
   },
   _user: {
     type: Schema.Types.ObjectId,
