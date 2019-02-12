@@ -18,37 +18,46 @@
 
 <body>
   <nav class="navbar navbar-light bg-light">
+    <ul class="nav justify-content-end mr-auto">
+
     {{#if user}}
 
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand pr-3" href="/">
       <i class="fas fa-home"></i>
     </a>
 
-    <a class="navbar-brand" href="/profile/{{user._id}}">
-      <i class="fas fa-user-circle"></i> {{user.username}}
-    </a>
-    
-    <a class="navbar-brand" href="/events">
+    <a class="navbar-brand pr-3" href="/events">
     <i class="fas fa-calendar-check"></i>
     </a>  
+    </ul>
 
-    <a class="navbar-brand" href="/auth/logout">
+    <ul class="nav justify-content-end mr-auto"></ul>
+    
+    <a class="navbar-brand pl-3" href="/profile/{{user._id}}">
+      <i class="fas fa-user-circle"></i> {{user.username}}
+    </a>
+
+    <a class="navbar-brand pl-3" href="/auth/logout">
     <i class="fas fa-sign-out-alt"></i>
     </a>
+  
     
     {{else}}
 
+    <ul class="nav justify-content-end mr-auto">
+
+    <a class="navbar-brand" href="/auth/login">
+        <i class="fas fa-sign-in-alt"></i>
+        </a>
+    
+    <a class="navbar-brand" href="/auth/signup">
+    <i class="fas fa-user-plus"></i>
+    </a>
+    </ul>
+</nav>
+{{/if}}
   </nav>
-        <li class="nav-item">
-          <a class="nav-link" href="/auth/login">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/auth/signup">Signup</a>
-        </li>
-        {{/if}}
-      </ul>
-    </div>
-  </nav>
+      
 
   {{{body}}}
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
