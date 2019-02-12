@@ -140,7 +140,7 @@ router.get("/profile/:userId", (req, res, next) => {
         }
       })
       .lean(),
-    Event.find({ _user: req.params.userId })
+    Event.find({ _user: req.params.userId }).populate('_game')
   ])
     .then(([user, join, event]) => {
       console.log(join);
