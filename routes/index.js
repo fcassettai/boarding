@@ -225,7 +225,11 @@ router.get("/profile/:userId", (req, res, next) => {
 //GET sort by distance from event page
 router.get("/sort-by-distance", (req, res,next) => {
  const maxDistance = req.user.maxDistance * 1000
+ if(req.query){
   var { lng,lat } = req.query
+ }
+  var lng = req.user.loc.coordinates[0]
+  var lat = req.user.loc.coordinates[1]
   Promise.all([
     Join.find({ _user: req.user._id }).lean(),
     Event.find({
