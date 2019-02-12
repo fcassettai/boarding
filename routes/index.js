@@ -82,6 +82,77 @@ router.get("/events", (req, res, next) => {
     .catch(err => console.log(err));
 });
 
+//GET event sorted by distance USER coordinates
+router.get("/events-user-coord", (req, res, next) => {
+  Promise.all([
+    Join.find({ _user: req.user._id }).lean(),
+    Event.find({
+      loc: {
+        $nearSphere: {
+          $geometry: {
+            type: 'Point',
+            coordinates: req.user.loc.coordinates
+          }
+          // $maxDistance: 999999999999999999999999 // in meters
+        }
+      }
+    })
+      .populate("_game")
+      .populate("_user")
+      .lean()
+  ])
+    .then(([usersEvents, allEvents]) => {
+      res.render("events", {
+        allEvents: allEvents.map(event => ({
+          ...event,
+          isJoined: usersEvents.some(
+            join =>
+              join._user.equals(req.user._id) && join._event.equals(event._id)
+          ),
+          isOwner: event._user._id.equals(req.user._id) ? true : false
+        })),
+        errorMessage: req.flash("errorMessage")[0]
+      });
+    })
+    .catch(err => console.log(err));
+});
+
+//GET events SORTED by date
+router.get("/events-sorted-by-date", (req, res, next) => {
+  Promise.all([
+    Join.find({ _user: req.user._id }).lean(),
+    Event.find({
+      loc: {
+        $nearSphere: {
+          $geometry: {
+            type: 'Point',
+            coordinates: req.user.loc.coordinates
+          },
+          $maxDistance: 10000 // in meters
+        }
+      }
+    }).sort({date:1})
+      .populate("_game")
+      .populate("_user")
+      .lean()
+  ])
+    .then(([usersEvents, allEvents]) => {
+      res.render("events", {
+        allEvents: allEvents.map(event => ({
+          ...event,
+          isJoined: usersEvents.some(
+            join =>
+              join._user.equals(req.user._id) && join._event.equals(event._id)
+          ),
+          isOwner: event._user._id.equals(req.user._id) ? true : false
+        })),
+        errorMessage: req.flash("errorMessage")[0]
+      });
+    })
+    .catch(err => console.log(err));
+});
+
+
 //GET join
 router.get("/join-event/:eventId", (req, res, next) => {
   const _event = req.params.eventId;
@@ -149,6 +220,7 @@ router.get("/profile/:userId", (req, res, next) => {
     .catch(err => console.log(err));
 });
 
+//GET sort by distance from event page
 router.get("/sort-by-distance", (req, res,next) => {
   console.log('req.query',req.query)
   var { lng,lat } = req.query
