@@ -1,5 +1,10 @@
 <a id='sort-by-distance' href="/sort-by-distance">sort-by-distance</a>
 <button id="get-pos">get position</button>
+<form action="/events-byname" method="GET">
+    <label for="team_name">Enter name: </label>
+    <input id="team_name" type="text" name="game" value="Default name for team.">
+    <input type="submit" value="Search">
+</form>
 {{#each allEvents}}
   <div class="card-body">
     <h5 class="card-title">{{_game.name}}</h5>
