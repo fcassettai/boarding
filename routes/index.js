@@ -316,6 +316,30 @@ router.get('/update-maxDistance-user/:range',(req,res)=>{
 })
 
 
+//GET event DETAIL page
+router.get('/detail-event/:eventId',(req, res)=>{
+  Promise.all([
+    Join.find({ _event: req.params.eventId }).populate("_user").lean(),
+    Event.findOne({_id:req.params.eventId})
+      .populate("_game")
+      .populate("_user")
+      .lean()
+  ]).then(([partecipantsEvent, event])=>{
+    partecipantsEvent = partecipantsEvent.map(partecipant=>{
+      return {user:partecipant._user.username}
+    })
+  
+    res.render('detail-event', {
+      eventDetail:{event,
+        partecipantsEvent
+
+      }
+    })
+  })
+
+})
+
+
 
 
 module.exports = router;
