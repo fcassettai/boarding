@@ -1,11 +1,11 @@
 <div class="d-flex flex-column w-50 mx-auto justify-content-center">
-<form action="/add-event" method="POST">
+<form action="/edit-event/{{event._id}}" method="POST">
 
   <label class="col-2 col-form-label pt-5">Location:</label>
   <div id='geocoder' class='geocoder' value="{{event.address}}"></div>
 
   <label class="col-2 col-form-label" for="date-time">Date: </label>
-  <input class="form-control" name="date" type="datetime-local" value={{event.date}} id="date-time">
+  <input class="form-control" name="date" type="datetime-local" value="{{formatDate event.date}}" id="date-time">
   {{!-- <input class="form-control" type="date" value="2011-08-19" name="date" id="example-date-input"> --}}
 
   {{!-- <label for="time" class="col-2 col-form-label">Time</label> --}}
@@ -13,7 +13,7 @@
 
   <label  class="col-2 col-form-label">Game:</label>
   <select class="form-control" name="_game">
-    {{#each game}}
+    {{#each games}}
     <option value='{{this._id}}'>
       {{this.name}}
     </option>
@@ -53,9 +53,10 @@
   var geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken
   });
-  console.log(event)
+  
   document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
   document.getElementById('geocoder').firstChild.childNodes[1].setAttribute("name", 'address')
+  document.getElementById('geocoder').firstChild.childNodes[1].value = `{{event.address}}`
 
 
 </script>
