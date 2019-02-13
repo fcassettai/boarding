@@ -81,16 +81,58 @@ router.get("/events", (req, res, next) => {
     .catch(err => console.log(err));
 });
 
+//GET edit-event and renders the page
+router.get("/edit-event/:eventId", (req, res, next) => {
+  if (!req.user) {
+    // req.flash("errorMessage", "You need to be connected to add a link");
+    res.redirect("/auth/login");
+    return;
+  }
+  Event.findOne({ _id: req.params.eventId }).then(event =>{
+    console.log(event)
+    res.render("edit-event", { event })
+  }
+  );
+});
+
+router.post("/edit-event/:eventId", (req, res, next) => {
+  const { address, date, _game, description, slot } = req.body;
+
+  mapbox(
+    "pk.eyJ1IjoiZnJkMjZ4IiwiYSI6ImNqcnQ4ZGFzMjF4dDA0M3BzOWg4NGNlem4ifQ.SgF_HKYViz0-nlirZ9Ksag",
+    `${address}`,
+    function(err, data) {
+      Event.findOneAndUpdate(
+        { _id: req.params.eventId },
+        {
+          $set: {
+            address,
+            loc: {
+              type: "Point",
+              coordinates: data.features[0].center
+            },
+            date,
+            _game,
+            description,
+            slot
+          }
+        }
+      )
+         .then(event => res.redirect('/events'))
+    }
+  );
+});
+
 //GET event sorted by distance USER coordinates
 router.get("/events-user-coord", (req, res, next) => {
-  const maxDistance = req.user.maxDistance * 1000
+  const maxDistance = req.user.maxDistance * 1000;
   Promise.all([
     Join.find({ _user: req.user._id }).lean(),
     Event.find({
       loc: {
         $nearSphere: {
           $geometry: {
-            type: 'Point',
+            type: "Point",
             coordinates: req.user.loc.coordinates
           },
           $maxDistance: maxDistance // in meters
@@ -119,20 +161,21 @@ router.get("/events-user-coord", (req, res, next) => {
 
 //GET events SORTED by date
 router.get("/sort-by-date", (req, res, next) => {
-  const maxDistance = req.user.maxDistance * 1000
+  const maxDistance = req.user.maxDistance * 1000;
   Promise.all([
     Join.find({ _user: req.user._id }).lean(),
     Event.find({
       loc: {
         $nearSphere: {
           $geometry: {
-            type: 'Point',
+            type: "Point",
             coordinates: req.user.loc.coordinates
           },
           $maxDistance: maxDistance
         }
       }
-    }).sort({date:1})
+    })
+      .sort({ date: 1 })
       .populate("_game")
       .populate("_user")
       .lean()
@@ -152,7 +195,6 @@ router.get("/sort-by-date", (req, res, next) => {
     })
     .catch(err => console.log(err));
 });
-
 
 //GET join
 router.get("/join-event/:eventId", (req, res, next) => {
@@ -212,7 +254,7 @@ router.get("/profile/:userId", (req, res, next) => {
         }
       })
       .lean(),
-    Event.find({ _user: req.params.userId }).populate('_game')
+    Event.find({ _user: req.params.userId }).populate("_game")
   ])
     .then(([user, join, event]) => {
       console.log(join);
@@ -222,26 +264,25 @@ router.get("/profile/:userId", (req, res, next) => {
 });
 
 //GET sort by distance from event page
-router.get("/sort-by-distance", (req, res,next) => {
-  console.log('req.user.loc.coordinates',req.user.loc.coordinates)
-  console.log('req.query',req.query)
- const maxDistance = req.user.maxDistance * 1000
- if(req.query.lng){
-  var { lng,lat } = req.query
- }else{
-  var lng = req.user.loc.coordinates[0]
-  var lat = req.user.loc.coordinates[1]
- }
+router.get("/sort-by-distance", (req, res, next) => {
+  console.log("req.user.loc.coordinates", req.user.loc.coordinates);
+  console.log("req.query", req.query);
+  const maxDistance = req.user.maxDistance * 1000;
+  if (req.query.lng) {
+    var { lng, lat } = req.query;
+  } else {
+    var lng = req.user.loc.coordinates[0];
+    var lat = req.user.loc.coordinates[1];
+  }
 
-  
   Promise.all([
     Join.find({ _user: req.user._id }).lean(),
     Event.find({
       loc: {
         $nearSphere: {
           $geometry: {
-            type: 'Point',
-            coordinates: [lng,lat]
+            type: "Point",
+            coordinates: [lng, lat]
           },
           $maxDistance: maxDistance
         }
@@ -265,25 +306,17 @@ router.get("/sort-by-distance", (req, res,next) => {
       });
     })
     .catch(err => console.log(err));
-
-  
-})
+});
 
 //GET find by game-name from search using gameId
 router.get("/events-byname", (req, res, next) => {
-  
-  Game.find({name:req.query.game })
-  .then(game=>{
-    
+  Game.find({ name: req.query.game }).then(game => {
     Promise.all([
       Join.find({ _user: req.user._id }).lean(),
-      Event.find({_game:game[0]._id})
+      Event.find({ _game: game[0]._id })
         .populate("_game")
         .populate("_user")
         .lean()
-        
-          
-        
     ])
       .then(([usersEvents, allEvents]) => {
         res.render("events", {
@@ -299,22 +332,17 @@ router.get("/events-byname", (req, res, next) => {
         });
       })
       .catch(err => console.log(err));
-
-  })
-  
+  });
 });
 
 //GET update POSITION USER
-router.get('/update-maxDistance-user/:range',(req,res)=>{
+router.get("/update-maxDistance-user/:range", (req, res) => {
   User.findOneAndUpdate(
     { _id: req.user._id },
-    { $set: { maxDistance: req.params.range } })
-    .then(()=>{
-      res.redirect(`/profile/${req.user._id}`)
-    })
-})
-
-
-
+    { $set: { maxDistance: req.params.range } }
+  ).then(() => {
+    res.redirect(`/profile/${req.user._id}`);
+  });
+});
 
 module.exports = router;
