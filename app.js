@@ -74,6 +74,15 @@ hbs.registerHelper('formatDate', (value, options) => {
   //     return options.fn(this);
   // }
 });
+hbs.registerHelper('formatDateProfile', (value, options) => {
+  try {
+    return value.toISOString().substr(0,10)
+  }
+  catch (err) {
+    return "formatDate had a problem..."
+  }
+  
+});
   
 
 // default value for title local
