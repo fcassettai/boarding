@@ -339,10 +339,37 @@ router.get("/events-byname", (req, res, next) => {
 router.get("/update-maxDistance-user/:range", (req, res) => {
   User.findOneAndUpdate(
     { _id: req.user._id },
-    { $set: { maxDistance: req.params.range } }
-  ).then(() => {
-    res.redirect(`/profile/${req.user._id}`);
-  });
-});
+    { $set: { maxDistance: req.params.range } })
+    .then(()=>{
+      res.redirect(`/profile/${req.user._id}`)
+    })
+})
+
+
+//GET event DETAIL page
+router.get('/detail-event/:eventId',(req, res)=>{
+  Promise.all([
+    Join.find({ _event: req.params.eventId }).populate("_user").lean(),
+    Event.findOne({_id:req.params.eventId})
+      .populate("_game")
+      .populate("_user")
+      .lean()
+  ]).then(([partecipantsEvent, event])=>{
+    partecipantsEvent = partecipantsEvent.map(partecipant=>{
+      return {user:partecipant._user.username}
+    })
+  
+    res.render('detail-event', {
+      eventDetail:{event,
+        partecipantsEvent
+
+      }
+    })
+  })
+
+})
+
+
+
 
 module.exports = router;
