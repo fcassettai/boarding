@@ -93,6 +93,7 @@ hbs.registerHelper('formatDateProfile', (value, options) => {
   }
   
 });
+//test
 
 hbs.registerHelper('formatDateEvents', (value, options) => {
   try {
