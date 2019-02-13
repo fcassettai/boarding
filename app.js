@@ -84,6 +84,26 @@ hbs.registerHelper('formatDateProfile', (value, options) => {
   
 });
   
+hbs.registerHelper('formatDateProfile', (value, options) => {
+  try {
+    return value.toISOString().substr(0,10)
+  }
+  catch (err) {
+    return "formatDate had a problem..."
+  }
+  
+});
+
+hbs.registerHelper('formatDateEvents', (value, options) => {
+  try {
+    return value.toString().substr(0,21) 
+  }
+  catch (err) {
+    return "formatDate had a problem..."
+  }
+  
+});
+  
 
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
