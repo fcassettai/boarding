@@ -84,19 +84,28 @@ router.get("/events", (req, res, next) => {
 //GET edit-event and renders the page
 router.get("/edit-event/:eventId", (req, res, next) => {
   if (!req.user) {
-    // req.flash("errorMessage", "You need to be connected to add a link");
+    
     res.redirect("/auth/login");
     return;
   }
-  Event.findOne({ _id: req.params.eventId }).then(event =>{
+  Promise.all([
+    Event.findOne({ _id: req.params.eventId }),
+    Game.find()
+  ]).then(([event, games]) =>{
     console.log(event)
-    res.render("edit-event", { event })
+    
+    res.render("edit-event", { 
+      event,
+      games}
+    )
   }
   );
 });
 
 router.post("/edit-event/:eventId", (req, res, next) => {
-  const { address, date, _game, description, slot } = req.body;
+  
+  const { address, _game,date, description, slot } = req.body;
+  
 
   mapbox(
     "pk.eyJ1IjoiZnJkMjZ4IiwiYSI6ImNqcnQ4ZGFzMjF4dDA0M3BzOWg4NGNlem4ifQ.SgF_HKYViz0-nlirZ9Ksag",
@@ -257,7 +266,7 @@ router.get("/profile/:userId", (req, res, next) => {
     Event.find({ _user: req.params.userId }).populate("_game")
   ])
     .then(([user, join, event]) => {
-      console.log(join);
+      
       res.render("profile", { user, join, event });
     })
     .catch(err => console.log(err));
