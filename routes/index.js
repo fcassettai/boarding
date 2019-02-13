@@ -378,6 +378,40 @@ router.get('/detail-event/:eventId',(req, res)=>{
 
 })
 
+router.post("/update-position-user", (req, res, next) => {
+const position = req.body.position
+
+mapbox(
+  "pk.eyJ1IjoiZnJkMjZ4IiwiYSI6ImNqcnQ4ZGFzMjF4dDA0M3BzOWg4NGNlem4ifQ.SgF_HKYViz0-nlirZ9Ksag",
+  `${position}`,
+  function(err, data) {
+    User.findOneAndUpdate(
+      { _id: req.user._id },
+      { $set: { position: position,
+        loc: {
+          type: "Point",
+          coordinates: data.features[0].center
+        }  } })
+      .then(()=>{
+        res.redirect(`/profile/${req.user._id}`)
+      })
+    .catch(err=>console.log(err))
+});
+// newUser.save()
+// .then(() => {
+// res.redirect("/");
+// })
+// .catch(err => {
+// res.render("auth/signup", { message: "Something went wrong" });
+// })
+    
+
+
+
+
+})
+
+
 
 
 
