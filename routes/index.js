@@ -13,6 +13,11 @@ router.get("/", (req, res, next) => {
 
 router.get("/events", (req, res, next) => {
   // By default, we don't sort
+  let betweenDates = {}
+  
+  if(req.query.start && req.query.end){
+  betweenDates = {$and:[{date:{$lte:req.query.end}},{date:{$gte:req.query.start}}]}
+  }
   let sortArg = {}
   if (req.query.sort === 'date') {
     sortArg = { date: 1 }
@@ -22,16 +27,20 @@ router.get("/events", (req, res, next) => {
   const maxDistance = req.user.maxDistance * 1000;
   Promise.all([
     Join.find({ _user: req.user._id }).lean(),
-    Event.find({
-      loc: {
-        $nearSphere: {
-          $geometry: {
-            type: "Point",
-            coordinates: req.user.loc.coordinates
-          },
-          $maxDistance: maxDistance
-        }
+    Event.
+    find({$and:[{loc: {
+      $nearSphere: {
+        $geometry: {
+          type: "Point",
+          coordinates: req.user.loc.coordinates
+        },
+        $maxDistance: maxDistance,
+        
       }
+    }}, betweenDates]
+      
+      
+      
     })
       .sort(sortArg)
       .populate("_game")
@@ -39,7 +48,7 @@ router.get("/events", (req, res, next) => {
       .lean()
   ])
     .then(([usersEvents, allEvents]) => {
-      console.log('all Events',allEvents[0]._user._id)
+      
       
       res.render("events", {
         allEvents: allEvents.map(event => ({
