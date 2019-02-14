@@ -339,11 +339,9 @@ router.get('/detail-event/:eventId', (req, res) => {
         }
         ,
         partecipantsEvent
-
       }
     })
   })
-
 })
 
 router.post("/update-position-user", (req, res, next) => {
@@ -376,11 +374,6 @@ router.post("/update-position-user", (req, res, next) => {
   // .catch(err => {
   // res.render("auth/signup", { message: "Something went wrong" });
   // })
-
-
-
-
-
 })
 
 

@@ -1,5 +1,7 @@
-$primary: #19b419;
-
+$primary: #264653;
+$danger: #E76F51;
+$success: #2A9D8F;
+$secondary: #E9C46A;
 @import 'node_modules/bootstrap/scss/bootstrap.scss';
 
 body {
@@ -8,7 +10,7 @@ body {
 }
 
 nav {
-  padding:1% 5% !important;
+  padding: 1% 0 !important;
 }
 
 
