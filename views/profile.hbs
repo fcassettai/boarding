@@ -12,9 +12,9 @@
 
     <div class="flex-column d-flex justify-content-center mt-4">
       <label for="customRange1">Max Distance:</label>
-      <p id="rangeValue" class="font-weight-bold"></p>
+      <p id="rangeValue" class="font-weight-bold">{{user.maxDistance}} Km</p>
     </div>
-    <input type="range" class="custom-range" id="customRange1" value="10" min="1" max="100">
+    <input type="range" class="custom-range" id="customRange1" value="{{user.maxDistance}}" min="1" max="100">
   </div>
   <div class="mx-auto text-center">
     <a href="/update-range-user" id="link-range-update" class="btn btn-success mt-3">Set Range</a>
@@ -99,7 +99,7 @@
 
   // Update the current slider value (each time you drag the slider handle)
   slider.oninput = function () {
-    output.innerHTML = this.value;
+    output.innerHTML = `${this.value} Km`;
     document.getElementById('link-range-update').setAttribute("href", `/update-maxDistance-user/${this.value}`)
   }
 
