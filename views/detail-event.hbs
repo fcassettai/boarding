@@ -8,12 +8,11 @@
   </div>
   {{/each}}
 
-</div>
-{{eventDetail.event.isOwner}}
 {{#if eventDetail.event.isSoldOut}}
 SOLD OUT
 {{/if}}
-{{eventDetail.event.isJoined}}
+</div>
+
 
 <div class="w-50 mx-auto">
   <h2 class="pt-5 ml-3 text-secondary">Details</h2>
@@ -30,6 +29,7 @@ SOLD OUT
   <h2 class="pt-5 ml-3 text-secondary">Game rules</h2>
   <hr>
   <div class="ml-3">
+    <h5>{{eventDetail.event._game.name}}</h5>
     <h6>{{ eventDetail.event._game.description}}</h6>
   </div>
 </div>
