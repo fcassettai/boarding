@@ -46,7 +46,7 @@
         <p class="card-text"> <strong>Date:</strong> {{formatDateEvents _event.date}}</p>
         <p class="card-text"><strong>Slots:</strong> {{_event.slot}}</p>
         <div class="card-body"></div>
-        <a href="/event/{{_id}}" class="card-link mr-5">Details</a>
+        <a href="/detail-event/{{_event._id}}" class="card-link mr-5">Details</a>
         <a href="/cancel-event-join/{{_event._id}}" class="btn btn-danger">Cancel</a>
       </div>
     </div>
@@ -72,7 +72,7 @@
         <p class="card-text"> <strong>Date:</strong> {{formatDateEvents date}}</p>
         <p class="card-text"><strong>Slots:</strong> {{slot}}</p>
         <div class="card-body"></div>
-        <a href="/event/{{_id}}" class="card-link mr-5">Details</a>
+        <a href="/detail-event/{{_id}}" class="card-link mr-5">Details</a>
         <a href="/cancel-event-join/{{_id}}" class="btn btn-danger">Cancel</a>
       </div>
     </div>
