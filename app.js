@@ -100,7 +100,7 @@ hbs.registerHelper('formatDateEvents', (value, options) => {
     return value.toString().substr(0,21) 
   }
   catch (err) {
-    return "formatDate had a problem..."
+    return ""
   }
   
 });
