@@ -207,6 +207,17 @@ let games = [
 //   throw err
 // })
 
+// let events = [
+//   address: "Hotel Alexander Plaza, Rosenstraße 1, Berlin, 10178, Germany",
+  
+  
+//   date: '2019-02-15T13:45:00',
+//   slot:45,
+//   _game: 5c64306c1f9e2c00049db895,
+//   _user: ,
+//   description: "Beers Beers Beers"}
+// ]
+
 Game.deleteMany()
 .then(() => {
   return Game.create(games)
@@ -216,6 +227,7 @@ Game.deleteMany()
   console.log(gamesCreated.map(u => u._id));
 })
 .then(() => {
+
   // Close properly the connection to Mongoose
   mongoose.disconnect()
 })

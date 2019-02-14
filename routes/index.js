@@ -61,7 +61,7 @@ router.get("/add-event", (req, res, next) => {
     res.redirect("/auth/login");
     return;
   }
-  Game.find().then(games => {
+  Game.find().sort( { name: 1 } ).then(games => {
     res.render("add-event", { games });
   });
 });
@@ -107,8 +107,8 @@ router.get("/edit-event/:eventId", (req, res, next) => {
     return;
   }
   Promise.all([
-    Event.findOne({ _id: req.params.eventId }),
-    Game.find()
+    Event.findOne({ _id: req.params.eventId }).populate("_game"),
+    Game.find().sort( { name: 1 })
   ])
     .then(([event, games]) => {
       console.log(event)
@@ -226,10 +226,10 @@ router.get("/cancel-event-join/:eventId", (req, res, next) => {
 //GET cancel EVENT
 router.get("/cancel-event/:eventId", (req, res, next) => {
   Promise.all([
-    Event.findOneAndRemove({ _id: req.params.eventId }),
+    Event.findOneAndDelete({ _id: req.params.eventId }),
     Join.deleteMany({ _event: req.params.eventId }).exec()
   ])
-    .then(() => res.redirect("/events"))
+    .then(() => res.redirect(`/profile/${req.user._id}`))
     .catch(err => console.log(err));
 });
 
