@@ -73,7 +73,8 @@ router.get("/events", (req, res, next) => {
             join =>
               join._user.equals(req.user._id) && join._event.equals(event._id)
           ),
-          isOwner: event._user._id.equals(req.user._id) ? true : false
+          isOwner: event._user._id.equals(req.user._id) ? true : false,
+          isSoldOut: event.slot ===0 ? true : false
         })),
         errorMessage: req.flash("errorMessage")[0]
       });
@@ -160,7 +161,8 @@ router.get("/events-user-coord", (req, res, next) => {
             join =>
               join._user.equals(req.user._id) && join._event.equals(event._id)
           ),
-          isOwner: event._user._id.equals(req.user._id) ? true : false
+          isOwner: event._user._id.equals(req.user._id) ? true : false,
+          isSoldOut: event.slot ===0 ? true : false
         })),
         errorMessage: req.flash("errorMessage")[0]
       });
@@ -197,7 +199,8 @@ router.get("/sort-by-date", (req, res, next) => {
             join =>
               join._user.equals(req.user._id) && join._event.equals(event._id)
           ),
-          isOwner: event._user._id.equals(req.user._id) ? true : false
+          isOwner: event._user._id.equals(req.user._id) ? true : false,
+          isSoldOut: event.slot ===0 ? true : false
         })),
         errorMessage: req.flash("errorMessage")[0]
       });
@@ -309,7 +312,8 @@ router.get("/sort-by-distance", (req, res, next) => {
             join =>
               join._user.equals(req.user._id) && join._event.equals(event._id)
           ),
-          isOwner: event._user._id.equals(req.user._id) ? true : false
+          isOwner: event._user._id.equals(req.user._id) ? true : false,
+          isSoldOut: event.slot ===0 ? true : false
         })),
         errorMessage: req.flash("errorMessage")[0]
       });
@@ -349,7 +353,8 @@ router.get("/events-byname", (req, res, next) => {
               join =>
                 join._user.equals(req.user._id) && join._event.equals(event._id)
             ),
-            isOwner: event._user._id.equals(req.user._id) ? true : false
+            isOwner: event._user._id.equals(req.user._id) ? true : false,
+            isSoldOut: event.slot ===0 ? true : false
           })),
           errorMessage: req.flash("errorMessage")[0]
         });

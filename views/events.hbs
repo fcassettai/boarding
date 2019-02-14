@@ -35,10 +35,14 @@
       <p class="card-text"> <strong>Host:</strong> {{_user.username}}</p>
       <div class="card-body">
         <a href="/detail-event/{{_id}}" class="card-link mr-5">Details</a>
+        {{#if this.isSoldOut}}
+        <i class="fas fa-ban"></i>
+        {{else}}
         {{#if this.isJoined}}
         <a href="/cancel-event-join/{{this._id}}" class="btn btn-danger">Cancel</a>
         {{else}}
         <a href="/join-event/{{this._id}}" class="btn btn-success ml-4">Join</a>
+        {{/if}}
         {{/if}}
       </div>
     </div>
