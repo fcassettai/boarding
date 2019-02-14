@@ -44,7 +44,7 @@ router.post("/signup", (req, res, next) => {
     const hashPass = bcrypt.hashSync(password, salt);
 
     mapbox(
-      process.env.MAPBOX_KEY,
+      'pk.eyJ1IjoiZnJkMjZ4IiwiYSI6ImNqcnQ4ZGFzMjF4dDA0M3BzOWg4NGNlem4ifQ.SgF_HKYViz0-nlirZ9Ksag',
       `${position}`,
       function(err, data) {
 
