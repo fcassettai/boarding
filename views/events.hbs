@@ -1,28 +1,36 @@
 <form action="/events-byname" method="GET">
   <div class="form-group d-flex flex-row justify-content-center align-self-center mt-5">
-    <a href="/add-event" class="btn btn-primary mb-2 mr-2"> Add <i class="ml-2 far fa-plus-square"></i></a>
-    
+    <a href="/add-event" class="btn btn-primary mb-2 mr-2"> Add
+      <i class="ml-2 far fa-plus-square"></i>
+    </a>
+
     <input type="text" class="form-control w-50 text-center" name="game" placeholder="Enter Game Filter">
     <button type="submit" class="btn btn-primary mb-2 ml-3">Enter</button>
   </div>
   <div class="text-center">
     <div class="dropdown show">
+      <form action="/events" method="GET">
       <div class="container d-flex flex-row d-flex justify-content-center align-self-center w-100 mb-3">
-         <h6 class="my-auto"> Start: </h6><input class="form-control w-25 mr-3 ml-3 mt-2" type="date" aria-label="Search" value="Start">
-          <h6 class="my-auto">End: </h6><input class="form-control w-25 mr-3 ml-3 mt-2" type="date" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0 " type="submit">Search</button>
-          </div>
-          <button id="get-pos" class="btn btn-primary mr-3 ml-4"><i class="fas fa-map-marker-alt"></i></button>
-      <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
+        <h6 class="my-auto"> Start: </h6>
+        <input name="start" class="form-control w-25 mr-3 ml-3 mt-2" type="date" aria-label="Search" value="Start">
+        <h6 class="my-auto">End: </h6>
+        <input name="end" class="form-control w-25 mr-3 ml-3 mt-2" type="date" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0 " type="submit">Search</button>
+      </div>
+      </form>
+      <button id="get-pos" class="btn btn-primary mr-3 ml-4">
+        <i class="fas fa-map-marker-alt"></i>
+      </button>
+      <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
         Sort your search
       </a>
 
       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
         <a id='sort-by-distance' href="/events" class="dropdown-item">By distance</a>
         <a class="dropdown-item" href="/events?sort=date">By date</a>
+      </div>
     </div>
-  </div>
   </div>
 </form>
 
@@ -34,23 +42,28 @@
         <h5 class="card-title">{{_game.name}}</h5>
       </div>
       <p class="card-text font-italic">{{address}}</p>
-      <p class="card-text"> <strong>Date:</strong> {{formatDateEvents date}}</p>
-      {{!-- <p class="card-text"> <strong>Time:</strong> {{time}}</p> --}}
+      <p class="card-text">
+        <strong>Date:</strong> {{formatDateEvents date}}</p>
+      {{!--
+      <p class="card-text">
+        <strong>Time:</strong> {{time}}</p> --}}
 
-      <p class="card-text"><strong>Slots:</strong> {{slot}}</p>
-      <p class="card-text"> <strong>Host:</strong> {{_user.username}}</p>
+      <p class="card-text">
+        <strong>Slots:</strong> {{slot}}</p>
+      <p class="card-text">
+        <strong>Host:</strong> {{_user.username}}</p>
       <div class="card-body">
         <a href="/detail-event/{{_id}}" class="card-link mr-5">Details</a>
         {{#if this.isSoldOut}}
-        <button class="btn btn-secondary" disabled><i class="fas fa-ban"></i></button>
+        <button class="btn btn-secondary" disabled>
+          <i class="fas fa-ban"></i>
+        </button>
 
-        {{else}}
-        {{#if this.isJoined}}
+        {{else}} {{#if this.isJoined}}
         <a href="/cancel-event-join/{{this._id}}" class="btn btn-danger">Cancel</a>
         {{else}}
         <a href="/join-event/{{this._id}}" class="btn btn-success ml-4">Join</a>
-        {{/if}}
-        {{/if}}
+        {{/if}} {{/if}}
       </div>
     </div>
   </div>

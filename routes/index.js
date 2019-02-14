@@ -17,6 +17,7 @@ router.get("/events", (req, res, next) => {
   if (req.query.sort === 'date') {
     sortArg = { date: 1 }
   }
+  
 
   const maxDistance = req.user.maxDistance * 1000;
   Promise.all([
@@ -38,6 +39,8 @@ router.get("/events", (req, res, next) => {
       .lean()
   ])
     .then(([usersEvents, allEvents]) => {
+      console.log('all Events',allEvents[0]._user._id)
+      
       res.render("events", {
         allEvents: allEvents.map(event => ({
           ...event,
