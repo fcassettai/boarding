@@ -319,15 +319,29 @@ router.get("/sort-by-distance", (req, res, next) => {
 
 //GET find by game-name from search using gameId
 router.get("/events-byname", (req, res, next) => {
+  const maxDistance = req.user.maxDistance * 1000;
+  var lng = req.user.loc.coordinates[0];
+  var lat = req.user.loc.coordinates[1];
+  
   Game.find({ name: req.query.game }).then(game => {
     Promise.all([
       Join.find({ _user: req.user._id }).lean(),
-      Event.find({ _game: game[0]._id })
+      Event.find({ _game: game[0]._id ,
+        loc: {
+          $nearSphere: {
+            $geometry: {
+              type: "Point",
+              coordinates: [lng, lat]
+            },
+            $maxDistance: maxDistance
+          }
+        }})
         .populate("_game")
         .populate("_user")
         .lean()
     ])
       .then(([usersEvents, allEvents]) => {
+       
         res.render("events", {
           allEvents: allEvents.map(event => ({
             ...event,
