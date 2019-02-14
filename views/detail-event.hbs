@@ -9,6 +9,11 @@
   {{/each}}
 
 </div>
+{{eventDetail.event.isOwner}}
+{{#if eventDetail.event.isSoldOut}}
+SOLD OUT
+{{/if}}
+{{eventDetail.event.isJoined}}
 
 <div class="w-50 mx-auto">
   <h2 class="pt-5 ml-3 text-secondary">Details</h2>

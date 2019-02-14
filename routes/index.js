@@ -386,9 +386,22 @@ router.get('/detail-event/:eventId',(req, res)=>{
     partecipantsEvent = partecipantsEvent.map(partecipant=>{
       return {user:partecipant._user.username}
     })
+
+    console.log('partecipantsEvent',partecipantsEvent)
+    console.log('req.user.username',req.user.username)
   
     res.render('detail-event', {
-      eventDetail:{event,
+      eventDetail:{
+        event:{
+          ...event,
+          isJoined: partecipantsEvent.some(
+            join =>
+              join.user === req.user.username
+          ),
+          isOwner: event._user._id.equals(req.user._id) ? true : false,
+          isSoldOut: event.slot ===0 ? true : false
+        }
+        ,
         partecipantsEvent
 
       }
