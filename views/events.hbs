@@ -67,13 +67,3 @@
 </div>
 
 
-<script>
-  document.getElementById('get-pos').onclick = function () {
-    navigator.geolocation.getCurrentPosition(function (pos) {
-      console.log(pos)
-      let position = `/sort-by-distance?lng=${pos.coords.longitude}&lat=${pos.coords.latitude}`
-      document.getElementById('sort-by-distance').setAttribute("href", position)
-    })
-  }
-
-</script>

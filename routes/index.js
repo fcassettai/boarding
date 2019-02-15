@@ -80,21 +80,15 @@ router.get("/events", (req, res, next) => {
           coordinates: req.user.loc.coordinates
         },
         $maxDistance: maxDistance,
-        
-      }
+        }
     }}, betweenDates]
-      
-      
-      
-    })
+      })
       .sort(sortArg)
       .populate("_game")
       .populate("_user")
       .lean()
   ])
     .then(([usersEvents, allEvents]) => {
-      
-      
       res.render("events", {
         allEvents: allEvents.map(event => ({
           ...event,
@@ -151,7 +145,7 @@ router.post("/add-event", (req, res, next) => {
           res.redirect("/events");
         })
         .catch(err => console.log(err));
-      /*console.log(`LONG & LAT of ${address} `,data.features[0].center);*/
+      
     }
   );
 });
